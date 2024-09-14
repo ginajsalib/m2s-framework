@@ -1,0 +1,13 @@
+[ General ]
+Cores = 8  
+Threads = 1
+Frequency = 2400
+[ BranchPredictor ]
+BTB.Sets = 512 
+BTB.Assoc = 2
+
+
+
+
+
+

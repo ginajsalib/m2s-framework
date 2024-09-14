@@ -41,10 +41,10 @@ def read_mem_ini_file(file_path):
     section_l1 = ' mod-l1-0 '
     keys_l1 = ['Accesses']
     section_l2 = ' mod-l2-0 '
-    keys_l2 = [ 'Accesses', 'HitRatio', 'Evictions] 
+    keys_l2 = [ 'Accesses', 'HitRatio', 'Evictions'] 
     # accesses needs to be max over all l2 caches 
     section_l3 = ' mod-l3-0 '
-    keys_l3 = 'Accesses'
+    keys_l3 = ['Accesses']
     sections = { section_l1: keys_l1, section_l2: keys_l2, section_l3: keys_l3}
     mem_values = {} 
     for key,value in sections.iteritems():
@@ -67,10 +67,16 @@ if __name__ == "__main__":
         print("Error: {}".format(e))
     mem_file_path = 'mm_MemoryReport'
     try:
-        mem_result = read_mem_ini_file(mem_file)
+        mem_result = read_mem_ini_file(mem_file_path)
         print(mem_result)
     except Exception as e:
         print("Error: {}".format(e))
+    merged_dict = result.copy()
+
+    for key, value in mem_result.items():
+        merged_dict[key] = value
+
+    print(merged_dict)
 
 
 
