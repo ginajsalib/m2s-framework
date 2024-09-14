@@ -1,4 +1,11 @@
 import ConfigParser
+import subprocess
+import csv
+#l2_values = [256, 512, 1024, 2048]
+#l3_values = [4, 8, 12, 16]
+l2_values = [256, 512] 
+l3_values = [4]
+
 
 def read_x86_ini_file(file_path):
     # Create a ConfigParser object
@@ -59,27 +66,50 @@ def read_mem_ini_file(file_path):
 
 # Example usage
 if __name__ == "__main__":
-    ini_file_path = 'mm_x86_Report'  # Path to your INI file
-    try:
-        result = read_x86_ini_file(ini_file_path)
-        print(result)
-    except Exception as e:
-        print("Error: {}".format(e))
-    mem_file_path = 'mm_MemoryReport'
-    try:
-        mem_result = read_mem_ini_file(mem_file_path)
-        print(mem_result)
-    except Exception as e:
-        print("Error: {}".format(e))
-    merged_dict = result.copy()
+   rows = [] 
+   for l2 in l2_values:
+       for l3 in l3_values:
+        # Generate the filename based on the current l2 and l3 values
+           filename = '/scripts/mem-config-{0}-{1}.txt'.format(l2, l3)
+           out_x86_filename = '/scripts/mm_x86_Report-{0}-{1}.txt'.format(l2, l3)
+           out_mem_filename = '/scripts/mm_Memory_Report-{0}-{1}.txt'.format(l2, l3)
+           # Define the command you want to run, using the filename
+           command = [' m2s --x86-sim detailed --mem-config ', filename, ' --x86-config /scripts/x86-config.txt', '--x86-report', out_x86_filename, '--mem-report', out_mem_filename, ' blackscholes 1 ../../m2s-bench-parsec-3.0/blackscholes/data-small/in_4K.txt prices.txt']
+        
+           # Print the command to be executed (optional)
+           print('Running command:', ' '.join(command))
+        
+           # Execute the command
+           try:
+               subprocess.check_call(command)
+           except subprocess.CalledProcessError as e:
+               print('Error running command:', e) 
+           ini_file_path = out_x86_filename  # Path to your INI file
+           try:
+               result = read_x86_ini_file(ini_file_path)
+               print(result)
+           except Exception as e:
+               print("Error: {}".format(e))
+           mem_file_path = 'mm_MemoryReport'
+           try:
+               mem_result = read_mem_ini_file(mem_file_path)
+               print(mem_result)
+           except Exception as e:
+               print("Error: {}".format(e))
+           merged_dict = result.copy()
 
-    for key, value in mem_result.items():
-        merged_dict[key] = value
+           for key, value in mem_result.items():
+               merged_dict[key] = value
 
-    print(merged_dict)
-
-
-
+           print(merged_dict)
+           rows.append(merged_dict)
+    if rows:
+        headers = rows[0].keys()
+        with open('output.csv', 'wb') as csvfile:
+           writer = csv.writerow(headers)
+           for row in rows:
+               writer.writerow([row.get(header, '') for header in headers])
+ 
 
 
 
