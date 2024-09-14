@@ -74,14 +74,16 @@ if __name__ == "__main__":
            out_x86_filename = '/scripts/mm_x86_Report-{0}-{1}.txt'.format(l2, l3)
            out_mem_filename = '/scripts/mm_Memory_Report-{0}-{1}.txt'.format(l2, l3)
            # Define the command you want to run, using the filename
-           command = [' m2s --x86-sim detailed --mem-config ', filename, ' --x86-config /scripts/x86-config.txt', '--x86-report', out_x86_filename, '--mem-report', out_mem_filename, ' blackscholes 1 ../../m2s-bench-parsec-3.0/blackscholes/data-small/in_4K.txt prices.txt']
+           command = [' /usr/local/bin/m2s',' --x86-sim',' detailed',' --mem-config ', filename, ' --x86-config', ' /scripts/x86-config.txt', '--x86-report', out_x86_filename, '--mem-report', out_mem_filename, ' /multi2sim/m2s-bench-parsec-3.0-src/blackscholes/blackscholes',' 1',' /multi2sim/m2s-bench-parsec-3.0/blackscholes/data-small/in_4K.txt',' prices.txt']
         
            # Print the command to be executed (optional)
            print('Running command:', ' '.join(command))
         
            # Execute the command
            try:
-               subprocess.check_call(command)
+               return_code = subprocess.call(' '.join(command), shell=True)
+ 
+               #subprocess.check_call(command)
            except subprocess.CalledProcessError as e:
                print('Error running command:', e) 
            ini_file_path = out_x86_filename  # Path to your INI file
@@ -103,10 +105,10 @@ if __name__ == "__main__":
 
            print(merged_dict)
            rows.append(merged_dict)
-    if rows:
+   if rows:
         headers = rows[0].keys()
         with open('output.csv', 'wb') as csvfile:
-           writer = csv.writerow(headers)
+           writer.writerow(headers)
            for row in rows:
                writer.writerow([row.get(header, '') for header in headers])
  
