@@ -73,7 +73,7 @@ if __name__ == "__main__":
          max_inst = 0
          end = 338500000
          step = 500000 
-         while max_inst <= end
+         while max_inst <= end:
         # Generate the filename based on the current l2 and l3 values
            filename = '/scripts/mem-config-{0}-{1}.txt'.format(l2, l3)
            out_x86_filename = '/scripts/mm_x86_Report-{0}-{1}.txt'.format(l2, l3)
