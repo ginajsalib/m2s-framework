@@ -27,6 +27,7 @@ def read_x86_ini_file(file_path):
         'Commit.FloatingPoint',
         'Commit.Ctrl',
         'Commit.Memory',
+        'Commit.Total',
         'Commit.PredAcc'
     ]
 
