@@ -48,7 +48,7 @@ def read_mem_ini_file(file_path):
     section_l1 = ' mod-l1-0 '
     keys_l1 = ['Accesses']
     section_l2 = ' mod-l2-0 '
-    keys_l2 = [ 'Accesses', 'HitRatio', 'Evictions'] 
+    keys_l2 = [ 'Accesses', 'HitRatio', 'Evictions', 'Hits'] 
     # accesses needs to be max over all l2 caches 
     section_l3 = ' mod-l3-0 '
     keys_l3 = ['Accesses']
@@ -108,6 +108,7 @@ if __name__ == "__main__":
    if rows:
         headers = rows[0].keys()
         with open('output.csv', 'wb') as csvfile:
+           writer = csv.writer(csvfile)
            writer.writerow(headers)
            for row in rows:
                writer.writerow([row.get(header, '') for header in headers])

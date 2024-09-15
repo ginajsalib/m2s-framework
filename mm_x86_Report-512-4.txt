@@ -131,8 +131,8 @@ TwoLevel.HistorySize = 8
 ; Global statistics
 [ Global ]
 Cycles = 479676513
-Time = 3758.29
-CyclesPerSecond = 127632
+Time = 3735.52
+CyclesPerSecond = 128410
 
 ; Dispatch stage
 Dispatch.Uop.nop = 116043
