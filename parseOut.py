@@ -1,6 +1,8 @@
 import ConfigParser
 import subprocess
 import csv
+from datetime import datetime
+
 #l2_values = [256, 512, 1024, 2048]
 #l3_values = [4, 8, 12, 16]
 l2_values = [256, 512] 
@@ -103,12 +105,18 @@ if __name__ == "__main__":
 
            for key, value in mem_result.items():
                merged_dict[key] = value
-
+           merged_dict["l2"] = l2
+           merged_dict["l3"] = l3
            print(merged_dict)
            rows.append(merged_dict)
    if rows:
         headers = rows[0].keys()
-        with open('output.csv', 'wb') as csvfile:
+        # Generate a timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+        # Construct the filename with the timestamp
+        out_filename = "output_{}.csv".format(timestamp)
+        with open(out_filename, 'wb') as csvfile:
            writer = csv.writer(csvfile)
            writer.writerow(headers)
            for row in rows:

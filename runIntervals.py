@@ -1,6 +1,8 @@
 import ConfigParser
 import subprocess
 import csv
+from datetime import datetime
+
 #l2_values = [256, 512, 1024, 2048]
 #l3_values = [4, 8, 12, 16]
 l2_values = [256, 512] 
@@ -70,7 +72,7 @@ if __name__ == "__main__":
    rows = [] 
    for l2 in l2_values:
        for l3 in l3_values:
-         max_inst = 0
+         max_inst = 500000
          end = 338500000
          step = 500000 
          while max_inst <= end:
@@ -79,7 +81,7 @@ if __name__ == "__main__":
            out_x86_filename = '/scripts/mm_x86_Report-{0}-{1}.txt'.format(l2, l3)
            out_mem_filename = '/scripts/mm_Memory_Report-{0}-{1}.txt'.format(l2, l3)
            # Define the command you want to run, using the filename
-           command = [' /usr/local/bin/m2s',' --x86-sim',' detailed',' --mem-config ', filename, ' --x86-config', ' /scripts/x86-config.txt', '--x86-report', out_x86_filename, '--mem-report', out_mem_filename, ' /multi2sim/m2s-bench-parsec-3.0-src/blackscholes/blackscholes',' 1',' /multi2sim/m2s-bench-parsec-3.0/blackscholes/data-small/in_4K.txt',' prices.txt']
+           command = [' /usr/local/bin/m2s',' --x86-sim',' detailed',' --mem-config ', filename, ' --x86-config', ' /scripts/x86-config.txt', '--x86-report', out_x86_filename, '--mem-report', out_mem_filename,'--x86-max-inst',str(max_inst), ' /multi2sim/m2s-bench-parsec-3.0-src/blackscholes/blackscholes',' 1',' /multi2sim/m2s-bench-parsec-3.0/blackscholes/data-small/in_4K.txt',' prices.txt']
         
            # Print the command to be executed (optional)
            print('Running command:', ' '.join(command))
@@ -108,12 +110,20 @@ if __name__ == "__main__":
            for key, value in mem_result.items():
                merged_dict[key] = value
            merged_dict['max_inst'] = max_inst
+           merged_dict["l2"] = l2
+           merged_dict["l3"] = l3
            max_inst += step
            print(merged_dict)
            rows.append(merged_dict)
    if rows:
         headers = rows[0].keys()
-        with open('output.csv', 'wb') as csvfile:
+        # Generate a timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+        # Construct the filename with the timestamp
+        out_filename = "output_{}.csv".format(timestamp)
+
+        with open(out_filename, 'wb') as csvfile:
            writer = csv.writer(csvfile)
            writer.writerow(headers)
            for row in rows:
